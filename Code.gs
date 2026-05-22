@@ -497,11 +497,8 @@ function setupDatabaseStructure() {
   createSheet('Products', ['ProductID', 'BrandName', 'ProductName', 'PackagingSize', 'UnitPrice', 'LastUpdated']);
   createSheet('Clients', ['ClientID', 'ClientName', 'Address', 'Phone', 'GSTIN', 'LastUpdated']);
   createSheet('History', [
-    'InvoiceNumber', 'UniqueID', 'InvoiceType', 'Date', 'DueDate', 'ClientName', 'ClientAddress', 'ClientPhone',
-    'HSNCode', 'ClientGSTIN', 'ClientState', 'ClientStateCode', 'PlaceOfSupply', 'Subtotal', 'TaxableAmount', 'Tax', 'CGST',
-    'SGST', 'IGST', 'TotalTax', 'GrandTotal', 'DueAmount', 'NonGstTaxType', 'CompanyName', 'FromAddress',
-    'FromPhone', 'FromEmail', 'FromGSTIN', 'Signatory', 'BankName', 'BankAcc', 'BankIFSC', 'UPI', 'Intro',
-    'Terms', 'ItemsJSON', 'LastUpdated'
+    'InvoiceNumber', 'Date', 'InvoiceType', 'ClientName', 'TaxableAmount', 'Subtotal', 'Tax', 'CGST',
+    'SGST', 'IGST', 'GrandTotal', 'DueAmount', 'ItemsJSON', 'HSNCode'
   ]);
 
   const historySheet = ss.getSheetByName('History');
