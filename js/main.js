@@ -266,6 +266,11 @@ function buildQrDataUrl(upi, companyName) {
 }
 
 function savePdfBlob(pdf, filename) {
+  if (window.innerWidth <= 768 && typeof pdf.save === 'function') {
+    pdf.save(filename);
+    return;
+  }
+
   const blob = pdf.output('blob');
   const url = URL.createObjectURL(blob);
   const link = document.createElement('a');
