@@ -173,7 +173,8 @@ async function apiGetInvoices(filters = {}) {
       date: cleanDate || '—',
       dueDate: cleanDue || '',
       totalAmount: parseFloat(inv.totalAmount || inv.GrandTotal || 0),
-      mobile: String(inv.mobile || inv.Phone || '')
+      mobile: String(inv.mobile || inv.Phone || ''),
+      hsnCode: String(inv.hsnCode || inv.HSNCode || inv.HSN || '')
     };
   });
 }

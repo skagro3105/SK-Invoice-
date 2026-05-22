@@ -133,6 +133,7 @@ function renderHistoryRows(invoices) {
             <td data-label="DATE">${escapeHTML(dateStr || '—')}</td>
             <td data-label="CUSTOMER NAME">${escapeHTML(inv.customerName || 'Unknown')}</td>
             <td data-label="MOBILE">${escapeHTML(inv.mobile || '—')}</td>
+            <td data-label="HSN CODE">${escapeHTML(inv.hsnCode || '—')}</td>
             <td data-label="TOTAL AMOUNT" style="text-align:right; font-weight:600; color:var(--primary)">${amtStr}</td>
             <td data-label="ACTION" class="action-cell">
                 <button class="btn btn-ghost btn-sm" onclick="openInvoice('${inv.uniqueId}')" title="Open in Editor">

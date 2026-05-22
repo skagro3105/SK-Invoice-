@@ -273,21 +273,29 @@
                 font-size: 13px;
             }
 
-            /* TOTAL AMOUNT — row 3 right */
+            /* HSN CODE — row 4 left */
             .history-table tbody tr td:nth-child(5) {
+                grid-column: 1;
+                grid-row: 4;
+                border-right: 1px solid var(--border);
+                font-size: 13px;
+            }
+
+            /* TOTAL AMOUNT — row 3 right */
+            .history-table tbody tr td:nth-child(6) {
                 grid-column: 2;
                 grid-row: 3;
                 text-align: right;
                 align-items: flex-end;
+                color: var(--primary) !important;
                 font-size: 14px;
                 font-weight: 700;
-                color: var(--primary) !important;
             }
 
             /* ACTION — full-width footer row */
-            .history-table tbody tr td:nth-child(6) {
+            .history-table tbody tr td:nth-child(7) {
                 grid-column: 1 / -1;
-                grid-row: 4;
+                grid-row: 5;
                 background: var(--bg-banner);
                 border-top: 1.5px solid var(--border);
                 display: flex;
@@ -297,7 +305,7 @@
                 gap: 8px;
                 padding: 10px 14px;
             }
-            .history-table tbody tr td:nth-child(6)::before {
+            .history-table tbody tr td:nth-child(7)::before {
                 display: none; /* no label for action row */
             }
 
@@ -357,6 +365,7 @@
                             <th>Date</th>
                             <th>Customer Name</th>
                             <th>Mobile</th>
+                            <th>HSN Code</th>
                             <th style="text-align:right">Total Amount</th>
                             <th style="text-align:right">Action</th>
                         </tr>

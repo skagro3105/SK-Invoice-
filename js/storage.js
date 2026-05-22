@@ -63,6 +63,8 @@ function extractInvoiceJSON(existingUniqueId = null) {
         hsn: formatText(r.hsn || ''),
         gstRate: isGst ? taxConfig.rate : (parseFloat(r.gstRate) || 0)
     }));
+    const hsnCodes = [...new Set(productRows.map(r => formatText(r.hsn)).filter(Boolean))];
+    const hsnCodeSummary = hsnCodes.join(', ');
 
     // Calculate totals carefully to match UI
     const subtotal = productRows.reduce((sum, r) => sum + r.total, 0);
@@ -96,6 +98,7 @@ function extractInvoiceJSON(existingUniqueId = null) {
         ClientName: formatText(document.getElementById('s-client-name').value || ''),
         ClientAddress: formatText(document.getElementById('s-client-addr').value || ''),
         ClientPhone: document.getElementById('s-client-phone').value || '',
+        HSNCode: hsnCodeSummary,
         ClientGSTIN: isGst ? (document.getElementById('s-client-gstin')?.value || '') : '',
         'ClientName ': formatText(document.getElementById('s-client-name').value || ''),
         'Client Name': formatText(document.getElementById('s-client-name').value || ''),

@@ -414,6 +414,7 @@ function getInvoiceById(id) {
       const structured = {
         InvoiceNumber: rowInvNum,
         UniqueID: rowObj.UniqueID || '',
+        HSNCode: rowObj.HSNCode || rowObj.HSN || '',
         meta: {
           uniqueId:      rowObj.UniqueID || rowInvNum,
           invoiceNumber: rowInvNum,
@@ -483,15 +484,28 @@ function setupDatabaseStructure() {
     }
   }
 
+  function ensureHistoryHsnColumn(sheet) {
+    const headers = sheet.getDataRange().getValues()[0] || [];
+    if (headers.indexOf('HSNCode') !== -1) return;
+
+    const clientPhoneIndex = headers.indexOf('ClientPhone');
+    const insertAfter = clientPhoneIndex >= 0 ? clientPhoneIndex + 1 : headers.length;
+    sheet.insertColumnAfter(Math.max(insertAfter, 1));
+    sheet.getRange(1, insertAfter + 1).setValue('HSNCode');
+  }
+
   createSheet('Products', ['ProductID', 'BrandName', 'ProductName', 'PackagingSize', 'UnitPrice', 'LastUpdated']);
   createSheet('Clients', ['ClientID', 'ClientName', 'Address', 'Phone', 'GSTIN', 'LastUpdated']);
   createSheet('History', [
     'InvoiceNumber', 'UniqueID', 'InvoiceType', 'Date', 'DueDate', 'ClientName', 'ClientAddress', 'ClientPhone',
-    'ClientGSTIN', 'ClientState', 'ClientStateCode', 'PlaceOfSupply', 'Subtotal', 'TaxableAmount', 'Tax', 'CGST',
+    'HSNCode', 'ClientGSTIN', 'ClientState', 'ClientStateCode', 'PlaceOfSupply', 'Subtotal', 'TaxableAmount', 'Tax', 'CGST',
     'SGST', 'IGST', 'TotalTax', 'GrandTotal', 'DueAmount', 'NonGstTaxType', 'CompanyName', 'FromAddress',
     'FromPhone', 'FromEmail', 'FromGSTIN', 'Signatory', 'BankName', 'BankAcc', 'BankIFSC', 'UPI', 'Intro',
     'Terms', 'ItemsJSON', 'LastUpdated'
   ]);
+
+  const historySheet = ss.getSheetByName('History');
+  if (historySheet) ensureHistoryHsnColumn(historySheet);
   
   return "Setup Complete";
 }
