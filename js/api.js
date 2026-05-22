@@ -91,7 +91,7 @@ window.safeStorage = {
 // ─── CONFIGURATION ────────────────────────────────────────────────────────────
 // Replace with your deployed Google Apps Script Web App URL after setup.
 // Deploy → New Deployment → Web App → Execute as: Me → Anyone: anyone (no auth)
-const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbx_2NtTq2Z6zrBjpTD3_4XB_iaUpBhNSsgiKhQ9I-VaozTsZXcLXxdOB-IwnQfzKQfY/exec';
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyvvNTlxM6JBqxT2MAat8blK20w3ueAFJ8yjiMtBd1nyyqNJ6Z4HAqprkRErQ3ELZbk/exec';
 const API_SECRET = 'sk_agro_secure_key_2026'; // Added Security Token
 
 // Request timeout in milliseconds
