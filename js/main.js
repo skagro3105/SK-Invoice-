@@ -229,6 +229,58 @@ function updateQR() {
 
 window.updateQR = updateQR;
 
+function buildQrDataUrl(upi, companyName) {
+  if (!window.QRCode) return '';
+
+  const wrap = document.createElement('div');
+  wrap.style.position = 'fixed';
+  wrap.style.left = '-10000px';
+  wrap.style.top = '0';
+  wrap.style.width = '90px';
+  wrap.style.height = '90px';
+  wrap.style.visibility = 'hidden';
+  document.body.appendChild(wrap);
+
+  try {
+    new QRCode(wrap, {
+      text: `upi://pay?pa=${upi}&pn=${encodeURIComponent(companyName)}`,
+      width: 90,
+      height: 90,
+      colorDark: '#000000',
+      colorLight: '#ffffff',
+      correctLevel: QRCode.CorrectLevel.M,
+    });
+
+    const qrCanvas = wrap.querySelector('canvas');
+    if (qrCanvas) return qrCanvas.toDataURL('image/png');
+
+    const qrImg = wrap.querySelector('img');
+    if (qrImg?.src) return qrImg.src;
+  } catch (err) {
+    console.warn('QR export failed:', err);
+  } finally {
+    wrap.remove();
+  }
+
+  return '';
+}
+
+function savePdfBlob(pdf, filename) {
+  const blob = pdf.output('blob');
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = filename;
+  link.rel = 'noopener';
+  link.style.display = 'none';
+  document.body.appendChild(link);
+  link.click();
+  setTimeout(() => {
+    URL.revokeObjectURL(url);
+    link.remove();
+  }, 1000);
+}
+
 async function fetchInventory() {
   try {
     const response = await getProducts();
@@ -1651,12 +1703,17 @@ function drawVectorInvoicePdf(pdf, payload) {
   ].filter(Boolean);
   paymentLines.forEach((line, index) => pdf.text(line, margin, y + 5 + index * 4));
 
-  const qrCanvas = document.querySelector('#qr-canvas canvas');
-  if (payload.settings?.showQR && qrCanvas) {
+  if (payload.settings?.showQR) {
     try {
-      pdf.addImage(qrCanvas.toDataURL('image/png'), 'PNG', 92, y + 2, 24, 24);
-      pdf.setFontSize(7.5);
-      pdf.text('Scan to Pay', 104, y + 29, { align: 'center' });
+      const qrDataUrl = buildQrDataUrl(
+        payload.bank?.upi || '',
+        payload.business?.company || payload.CompanyName || ''
+      );
+      if (qrDataUrl) {
+        pdf.addImage(qrDataUrl, 'PNG', 92, y + 2, 24, 24);
+        pdf.setFontSize(7.5);
+        pdf.text('Scan to Pay', 104, y + 29, { align: 'center' });
+      }
     } catch (err) {
       console.warn('Skipping QR image:', err.message);
     }
@@ -2001,7 +2058,7 @@ async function downloadVectorPDF() {
     const pdf = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
 
     drawA4InvoicePdf(pdf, payload);
-    pdf.save(`Invoice_${invNum}.pdf`);
+    savePdfBlob(pdf, `Invoice_${invNum}.pdf`);
     await advanceToNextInvoiceDraftAfterDownload();
     toast('PDF downloaded and next invoice number is ready.');
   } catch (err) {
@@ -2099,6 +2156,26 @@ async function downloadPDF() {
     const clone = element.cloneNode(true);
     clone.id = 'pdf-invoice-clone';
     clone.removeAttribute('style'); // wipe any inline transform/scale
+
+    if ($('qr-toggle')?.checked) {
+      const qrCanvasWrap = clone.querySelector('#qr-canvas');
+      if (qrCanvasWrap) {
+        const qrDataUrl = buildQrDataUrl(
+          $('s-upi')?.value || '',
+          $('s-company')?.value || ''
+        );
+        if (qrDataUrl) {
+          qrCanvasWrap.innerHTML = '';
+          const qrImg = document.createElement('img');
+          qrImg.src = qrDataUrl;
+          qrImg.alt = 'QR Code';
+          qrImg.style.width = '90px';
+          qrImg.style.height = '90px';
+          qrImg.style.display = 'block';
+          qrCanvasWrap.appendChild(qrImg);
+        }
+      }
+    }
 
     // ── Step 3: Replace *all* form fields in clone with static text divs ──
     clone.querySelectorAll('input, textarea, select').forEach(inp => {
@@ -2226,7 +2303,7 @@ async function downloadPDF() {
       pdf.addImage(img, 'JPEG', 0, 0, PW, sliceMm);
     }
 
-    pdf.save(`Invoice_${invNum}.pdf`);
+    savePdfBlob(pdf, `Invoice_${invNum}.pdf`);
     if (saveResult) {
       await advanceToNextInvoiceDraftAfterDownload();
       toast('PDF downloaded and next invoice number is ready ✓');
