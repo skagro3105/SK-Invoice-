@@ -2640,6 +2640,8 @@ function setBillingMode(mode) {
   renderRows();
   renderMobItems();
   refreshPaper();
+  // If mobile preview is active, rescale the paper so updated notes/terms are visible
+  try { if (document.getElementById('main')?.classList.contains('mob-preview')) scalePaperForMobile(); } catch (e) {}
   recalcAll();
   autoSave();
 }
