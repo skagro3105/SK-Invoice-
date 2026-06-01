@@ -932,8 +932,8 @@ function recalcAll() {
   const taxType = resolveTaxTypeFromInputs();
   const totals = calculateInvoiceTotals(sub, taxType, due);
   syncTaxPreviewRows(totals);
-  const psub = $('p-subtotal'); if (psub) psub.textContent = 'Rs. ' + INR.format(totals.subtotal);
-  const pcgst = $('p-cgst'); if (pcgst) pcgst.textContent = 'Rs. ' + INR.format(totals.cgstAmount);
+  const psub = $('p-subtotal'); if (psub) psub.textContent = '₹' + INR.format(totals.subtotal);
+  const pcgst = $('p-cgst'); if (pcgst) pcgst.textContent = '₹' + INR.format(totals.cgstAmount);
   const psgst = $('p-sgst'); if (psgst) psgst.textContent = '₹' + INR.format(totals.sgstAmount);
   const pigst = $('p-igst'); if (pigst) pigst.textContent = '₹' + INR.format(totals.igstAmount);
   const ptot = $('p-totalgst'); if (ptot) ptot.textContent = '₹' + INR.format(totals.totalTax);
@@ -1000,8 +1000,8 @@ function syncTaxPreviewRows(totals) {
   const psub = $('p-subtotal');
   const pcgst = $('p-cgst');
 
-  if (psub) psub.textContent = 'Rs. ' + INR.format(totals.subtotal || 0);
-  if (pcgst) pcgst.textContent = 'Rs. ' + INR.format(totals.cgstAmount || 0);
+  if (psub) psub.textContent = '₹' + INR.format(totals.subtotal || 0);
+  if (pcgst) pcgst.textContent = '₹' + INR.format(totals.cgstAmount || 0);
   if (ptaxtypeRow) ptaxtypeRow.style.display = totals.taxType !== 'NONE' ? '' : 'none';
   if (ptaxtypeLabel) ptaxtypeLabel.textContent = formatTaxLabel(totals.taxType);
   if (pcgstRow) pcgstRow.style.display = totals.cgstAmount > 0 ? '' : 'none';
@@ -1527,7 +1527,7 @@ async function saveToCloud(silent = false) {
 
 // ─── PDF GENERATION ───────────────────────────────────────────────────────────
 function pdfMoney(value) {
-  return 'Rs. ' + INR.format(parseFloat(value) || 0);
+  return '₹' + INR.format(parseFloat(value) || 0);
 }
 
 function pdfWrapLines(pdf, text, maxWidth) {
@@ -2612,6 +2612,30 @@ function setBillingMode(mode) {
   // Re-run client sub display since GST state details may need to appear/disappear
   syncClientSub();
 
+  // GST-only: swap intro/terms shown in preview & saved PDF
+  // Backup non-GST values on first switch, then override inputs for GST invoices
+  try {
+    const introEl = $('s-intro');
+    const termsEl = $('s-terms');
+    if (introEl && termsEl) {
+      if (isGst) {
+        if (!document.body.dataset._backupIntro) document.body.dataset._backupIntro = introEl.value || '';
+        if (!document.body.dataset._backupTerms) document.body.dataset._backupTerms = termsEl.value || '';
+        introEl.value = '';
+        termsEl.value = `1. Good once sold will not be taken back\n2. Interest @18% p.a. will be charged if payment is not made within due date.\n3. Our risk and responsibility ceases as soon as the goods leave our premises\n4. "Subject to 'RAJKOT' Jurisdiction only. E.&.O.E"`;
+      } else {
+        // Restore previous values when leaving GST mode
+        if (document.body.dataset._backupIntro !== undefined) {
+          introEl.value = document.body.dataset._backupIntro || '';
+          delete document.body.dataset._backupIntro;
+        }
+        if (document.body.dataset._backupTerms !== undefined) {
+          termsEl.value = document.body.dataset._backupTerms || '';
+          delete document.body.dataset._backupTerms;
+        }
+      }
+    }
+  } catch (e) { console.warn('GST intro/terms swap failed:', e); }
   ensureOneBlankItem();
   renderRows();
   renderMobItems();
