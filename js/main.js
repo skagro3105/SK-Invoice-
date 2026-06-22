@@ -27,6 +27,12 @@ function normalizeGSTIN(value) {
   return String(value || '').trim().toUpperCase();
 }
 
+function formatClientPhoneForPreview(value) {
+  const phone = String(value || '').trim();
+  if (!phone) return '';
+  return /^mo\./i.test(phone) ? phone : `Mo. ${phone}`;
+}
+
 function getUniqueBrands() {
   return [...new Set(inventoryData
     .map(item => (item.brand || item.BrandName || '').toString().trim())
@@ -479,7 +485,7 @@ function bindSidebarInputs() {
     if (pSub) {
       pSub.textContent = [
         $('s-client-addr')?.value || '',
-        $('s-client-phone')?.value || '',
+        formatClientPhoneForPreview($('s-client-phone')?.value || ''),
         normalizeGSTIN($('s-client-gstin')?.value || '')
       ].filter(Boolean).join(' | ');
     }
@@ -547,7 +553,7 @@ function refreshPaper() {
   if (pClientSub) {
     pClientSub.textContent = [
       $('s-client-addr')?.value || '',
-      $('s-client-phone')?.value || '',
+      formatClientPhoneForPreview($('s-client-phone')?.value || ''),
       $('s-client-gstin')?.value || ''
     ].filter(Boolean).join(' | ');
   }
@@ -2565,7 +2571,7 @@ window.addEventListener('DOMContentLoaded', () => {
 // ─── GLOBAL CLIENT SUB SYNC ──────────────────────────────────────────────────
 function syncClientSub(e) {
   const addr = $('s-client-addr')?.value || '';
-  const phone = $('s-client-phone')?.value || '';
+  const phone = formatClientPhoneForPreview($('s-client-phone')?.value || '');
   const gstin = $('s-client-gstin')?.value || '';
   const parts = [addr, phone, gstin].filter(Boolean);
   const pcs = $('p-client-sub'); if (pcs) pcs.textContent = parts.join(' | ');
