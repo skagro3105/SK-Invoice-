@@ -973,7 +973,8 @@ body.gst-mode .gst-doc-strip {
 
 .to-sub {
   font-size: 11px;
-  color: #64748b;
+  font-weight: 700;
+  color: #000;
   margin-top: 3px;
   line-height: 1.5;
   min-height: 14px;
