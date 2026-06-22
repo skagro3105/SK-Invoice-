@@ -18,16 +18,6 @@
             transition: background .2s, color .2s;
             margin-left: 16px;
             z-index: 1002;
-                    position: absolute;
-                    right: 0;
-                    top: 0;
-                    margin-right: 8px;
-                }
-                    position: absolute;
-                    right: 0;
-                    top: 0;
-                    margin-right: 8px;
-                }
         }
         .theme-toggle:hover {
             background: #10b981;
@@ -115,7 +105,6 @@
             font-size: 24px;
             cursor: pointer;
             color: #f87171;
-        }
         }
 
         body {
@@ -366,7 +355,7 @@
         .btn-danger {
             background: transparent;
             color: #f87171;
-            border: 1px solid #ef4444/30
+            border: 1px solid rgba(239, 68, 68, .3)
         }
 
         .btn-danger:hover {
@@ -704,7 +693,8 @@
 
         .to-sub {
             font-size: 11px;
-            color: #64748b;
+            font-weight: 700;
+            color: #000;
             margin-top: 3px;
             line-height: 1.5;
             min-height: 14px
