@@ -23,8 +23,19 @@ function normalizeText(value) {
   return String(value || '').trim().toLowerCase();
 }
 
+function normalizeBusinessName(value) {
+  const normalized = String(value || '').trim();
+  if (normalized === 'SK Agro Chemical' || normalized === 'S K Agro Chemical') return 'S K AGRO CHEMICAL';
+  return value;
+}
+
 function normalizeGSTIN(value) {
   return String(value || '').trim().toUpperCase();
+}
+
+function formatClientGSTINForPreview(value) {
+  const gstin = normalizeGSTIN(value);
+  return gstin ? `GSTIN: ${gstin}` : '';
 }
 
 function formatClientPhoneForPreview(value) {
@@ -431,7 +442,7 @@ function setUserPhone(mobile) {
 
 const SYNC_MAP = {
   's-company': ['p-company', 'p-from-name'],
-  's-address': ['p-address'],
+  's-address': ['p-address', 'p-from-sub'],
   's-phone': ['p-phone'],
   's-email': ['p-email'],
   's-gstin': ['p-gstin'],
@@ -486,7 +497,7 @@ function bindSidebarInputs() {
       pSub.textContent = [
         $('s-client-addr')?.value || '',
         formatClientPhoneForPreview($('s-client-phone')?.value || ''),
-        normalizeGSTIN($('s-client-gstin')?.value || '')
+        formatClientGSTINForPreview($('s-client-gstin')?.value || '')
       ].filter(Boolean).join(' | ');
     }
   };
@@ -554,7 +565,7 @@ function refreshPaper() {
     pClientSub.textContent = [
       $('s-client-addr')?.value || '',
       formatClientPhoneForPreview($('s-client-phone')?.value || ''),
-      $('s-client-gstin')?.value || ''
+      formatClientGSTINForPreview($('s-client-gstin')?.value || '')
     ].filter(Boolean).join(' | ');
   }
 
@@ -1370,6 +1381,10 @@ function setFieldValues(data) {
   Object.entries(data).forEach(([id, val]) => {
     const el = $(id);
     if (!el) return;
+    if (id === 's-company' || id === 's-signatory') {
+      el.value = normalizeBusinessName(val) || '';
+      return;
+    }
     if (id === 's-gstin' || id === 's-client-gstin' || id === 'modal-client-gstin') {
       el.value = normalizeGSTIN(val);
       return;
@@ -2572,7 +2587,7 @@ window.addEventListener('DOMContentLoaded', () => {
 function syncClientSub(e) {
   const addr = $('s-client-addr')?.value || '';
   const phone = formatClientPhoneForPreview($('s-client-phone')?.value || '');
-  const gstin = $('s-client-gstin')?.value || '';
+  const gstin = formatClientGSTINForPreview($('s-client-gstin')?.value || '');
   const parts = [addr, phone, gstin].filter(Boolean);
   const pcs = $('p-client-sub'); if (pcs) pcs.textContent = parts.join(' | ');
   

@@ -876,7 +876,7 @@ input[type="number"] {
 
 .paper-company-sub {
   font-size: 11px;
-  color: #64748b;
+  color: #000;
   margin-top: 3px;
   line-height: 1.6;
 }
@@ -895,12 +895,12 @@ input[type="number"] {
 
 .paper-meta {
   font-size: 12px;
-  color: #64748b;
+  color: #000;
   line-height: 1.8;
 }
 
 .paper-meta strong {
-  color: #1e293b;
+  color: #000;
   font-weight: 600;
 }
 
@@ -911,7 +911,7 @@ input[type="number"] {
 .gst-doc-copy {
   font-size: 11px;
   font-weight: 800;
-  color: #1e293b;
+  color: #000;
 }
 
 .gst-doc-copy.gst-left {
@@ -967,7 +967,7 @@ body.gst-mode .gst-doc-strip {
 .to-main {
   font-size: 14px;
   font-weight: 700;
-  color: #1e293b;
+  color: #000;
   min-height: 18px;
 }
 
@@ -982,7 +982,7 @@ body.gst-mode .gst-doc-strip {
 
 .paper-intro {
   font-size: 12px;
-  color: #475569;
+  color: #000;
   margin-bottom: 20px;
   line-height: 1.6;
   white-space: pre-line;
@@ -1056,7 +1056,7 @@ body.gst-mode .gst-doc-strip {
 }
 
 .items-table tbody td:nth-child(1) {
-  color: #94a3b8;
+  color: #000;
   font-weight: 600;
   text-align: center;
   white-space: nowrap;
@@ -1082,7 +1082,7 @@ body.gst-mode .gst-doc-strip {
   border: none;
   background: transparent;
   font-size: 10px;
-  color: #1e293b;
+  color: #000;
   font-family: "Inter", sans-serif;
   outline: none;
   padding: 2px 4px;
@@ -1169,24 +1169,24 @@ td .row-total {
   padding: 9px 16px;
   font-size: 13px;
   border-bottom: 1px solid #f1f5f9;
-  color: #64748b;
+  color: #000;
 }
 
 .totals-row span:last-child {
   font-weight: 600;
-  color: #1e293b;
+  color: #000;
 }
 
 .tax-type-row {
   background: rgba(16, 185, 129, 0.05);
-  color: #0f172a;
+  color: #000;
   font-weight: 600;
 }
 
 .tax-detail-row {
   padding-left: 24px;
   font-size: 11px;
-  color: #475569;
+  color: #000;
 }
 
 .tax-detail-row span,
@@ -1196,7 +1196,7 @@ td .row-total {
 
 .tax-detail-row span:last-child {
   font-weight: 600;
-  color: #0f172a;
+  color: #000;
 }
 .totals-grand {
   display: flex;
@@ -1234,12 +1234,12 @@ td .row-total {
 
 .bank-row {
   font-size: 11px;
-  color: #475569;
+  color: #000;
   margin-bottom: 4px;
 }
 
 .bank-row strong {
-  color: #1e293b;
+  color: #000;
   font-weight: 600;
 }
 
@@ -1257,7 +1257,7 @@ td .row-total {
 
 .qr-label {
   font-size: 9px;
-  color: #94a3b8;
+  color: #000;
   text-transform: uppercase;
   letter-spacing: 1px;
   margin-top: 6px;
@@ -1272,7 +1272,7 @@ td .row-total {
 
 .sig-label {
   font-size: 9px;
-  color: #94a3b8;
+  color: #000;
   text-transform: uppercase;
   letter-spacing: 1px;
   margin-bottom: 6px;
@@ -1282,14 +1282,14 @@ td .row-total {
 .sig-name {
   font-size: 12px;
   font-weight: 700;
-  color: #1e293b;
-  border-top: 1px solid #94a3b8;
+  color: #000;
+  border-top: 1px solid #000;
   padding-top: 6px;
 }
 
 .paper-notes {
   font-size: 11px;
-  color: #94a3b8;
+  color: #000;
   margin-top: 16px;
   padding-top: 12px;
   border-top: 1px dashed #e2e8f0;
@@ -1463,7 +1463,7 @@ td .row-total {
 
 .qr-label {
   font-size: 9px;
-  color: #94a3b8;
+  color: #000;
   text-transform: uppercase;
   letter-spacing: 1px;
   margin-top: 6px;
@@ -1478,7 +1478,7 @@ td .row-total {
 
 .sig-label {
   font-size: 9px;
-  color: #94a3b8;
+  color: #000;
   text-transform: uppercase;
   letter-spacing: 1px;
   margin-bottom: 6px;
@@ -1488,14 +1488,14 @@ td .row-total {
 .sig-name {
   font-size: 12px;
   font-weight: 700;
-  color: #1e293b;
-  border-top: 1px solid #94a3b8;
+  color: #000;
+  border-top: 1px solid #000;
   padding-top: 6px;
 }
 
 .paper-notes {
   font-size: 11px;
-  color: #94a3b8;
+  color: #000;
   margin-top: 16px;
   padding-top: 12px;
   border-top: 1px dashed #e2e8f0;

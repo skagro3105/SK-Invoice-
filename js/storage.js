@@ -396,7 +396,13 @@ function restoreInvoiceUI(data) {
 // Helper to safely set value of DOM input by ID
 function setVal(id, value) {
     const el = document.getElementById(id);
-    if (el) el.value = value || '';
+    if (!el) return;
+    const normalized = String(value || '').trim();
+    if ((id === 's-company' || id === 's-signatory') && (normalized === 'SK Agro Chemical' || normalized === 'S K Agro Chemical')) {
+        el.value = 'S K AGRO CHEMICAL';
+        return;
+    }
+    el.value = value || '';
 }
 
 // Generate a unique ID for the invoice (fallback if not using DB auto-increment)

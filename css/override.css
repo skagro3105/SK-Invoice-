@@ -22,7 +22,7 @@ body.gst-mode .totals-row {
   padding: 9px 16px !important;
   font-size: 13px !important;
   border-bottom: 1px solid #f1f5f9 !important;
-  color: #64748b !important;
+  color: #000 !important;
 }
 
 body.gst-mode .totals-row:last-of-type {
@@ -35,7 +35,7 @@ body.gst-mode .totals-row span:first-child {
 
 body.gst-mode .totals-row span:last-child {
   font-weight: 600 !important;
-  color: #1e293b !important;
+  color: #000 !important;
 }
 
 /* Specific styling for Previous Due inside the box */
