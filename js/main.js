@@ -35,7 +35,7 @@ function normalizeGSTIN(value) {
 
 function formatClientGSTINForPreview(value) {
   const gstin = normalizeGSTIN(value);
-  return gstin ? `GSTIN: ${gstin}` : '';
+  return gstin ? `GSTIN:\u00A0${gstin}` : '';
 }
 
 function formatClientPhoneForPreview(value) {
