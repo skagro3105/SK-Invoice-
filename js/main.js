@@ -8,6 +8,7 @@
 // ─── HELPERS ──────────────────────────────────────────────────────────────────
 const $ = id => document.getElementById(id);
 const INR = new Intl.NumberFormat('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+const DEFAULT_GST_HSN = '3808';
 
 function esc(s) {
   if (s == null) return '';
@@ -601,7 +602,7 @@ function addRow(data = {}) {
     qty: data.qty != null ? data.qty : '',
     price: data.price || '',
     total: data.total || 0,
-    hsn: data.hsn || '',
+    hsn: data.hsn || (isGstMode ? DEFAULT_GST_HSN : ''),
     gstRate: data.gstRate != null ? data.gstRate : (isGstMode ? 18 : 0)
   });
   renderRows();
@@ -2619,7 +2620,7 @@ function setBillingMode(mode) {
   rows.forEach(r => {
     if (isGst) {
       if (!r.gstRate && r.gstRate !== 0) r.gstRate = getTaxConfig(resolveTaxTypeFromInputs()).rate || 18;
-      if (!r.hsn) r.hsn = '';
+      if (!r.hsn) r.hsn = DEFAULT_GST_HSN;
     } else {
       r.gstRate = 0;
       r.hsn = '';
