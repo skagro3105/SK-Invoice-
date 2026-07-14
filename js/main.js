@@ -375,6 +375,8 @@ function doLogout() {
     safeStorage.removeItem('inv_auth');
     safeStorage.removeItem('inv_user_mobile');
     safeStorage.removeItem('inv_auth_token');
+    safeStorage.removeItem('inv_refresh_token');
+    safeStorage.removeItem('inv_token_expires_at');
     safeStorage.removeItem(LS_KEY);
   } catch (err) {
     console.warn('Logout cleanup failed:', err);
