@@ -151,8 +151,21 @@ async function loadData() {
       };
   });
 
-      productsData = productsData.slice().reverse();
-      clientsData = clientsData.slice().reverse();
+  // Sort Products by ID descending
+  productsData.sort((a, b) => {
+    const numA = parseInt((a.ProductID || '').match(/\d+/)?.[0] || '0', 10);
+    const numB = parseInt((b.ProductID || '').match(/\d+/)?.[0] || '0', 10);
+    if (numA !== numB) return numB - numA;
+    return (b.ProductID || '').localeCompare(a.ProductID || '');
+  });
+
+  // Sort Clients by ID descending
+  clientsData.sort((a, b) => {
+    const numA = parseInt((a.ClientID || '').match(/\d+/)?.[0] || '0', 10);
+    const numB = parseInt((b.ClientID || '').match(/\d+/)?.[0] || '0', 10);
+    if (numA !== numB) return numB - numA;
+    return (b.ClientID || '').localeCompare(a.ClientID || '');
+  });
 
   renderTables();
 }
