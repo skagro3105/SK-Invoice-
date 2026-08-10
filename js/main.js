@@ -337,7 +337,7 @@ async function fetchClients() {
 async function doLogin() {
   try {
     const u = ($('l-user').value || '').trim();
-    const p = $('l-pass').value || '';
++    const p = ($('l-pass').value || '').trim();
     if (!u || !p) {
       toast('Please enter username and password', 'error');
       return;
