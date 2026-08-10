@@ -1,28 +1,47 @@
-// Safe localStorage wrapper to prevent crashes in private windows / disabled cookies
+// Safe localStorage + cookie wrapper to prevent crashes in private windows / disabled cookies on Safari/iOS
 window.safeStorage = {
   getItem(key) {
     try {
-      return localStorage.getItem(key);
+      const val = localStorage.getItem(key);
+      if (val !== null && val !== undefined) return val;
     } catch (e) {
       console.warn('localStorage.getItem failed for key: ' + key, e);
-      return window['__fs_' + key] || null;
     }
+    try {
+      const name = encodeURIComponent(key) + '=';
+      const ca = document.cookie.split(';');
+      for (let i = 0; i < ca.length; i++) {
+        let c = ca[i].trim();
+        if (c.indexOf(name) === 0) return decodeURIComponent(c.substring(name.length));
+      }
+    } catch (e) {}
+    return window['__fs_' + key] || null;
   },
   setItem(key, value) {
+    const valStr = String(value);
     try {
-      localStorage.setItem(key, value);
+      localStorage.setItem(key, valStr);
     } catch (e) {
       console.warn('localStorage.setItem failed for key: ' + key, e);
-      window['__fs_' + key] = String(value);
     }
+    try {
+      const secureAttr = window.location.protocol === 'https:' ? '; Secure' : '';
+      const expires = new Date(Date.now() + 365 * 86400 * 1000).toUTCString();
+      document.cookie = `${encodeURIComponent(key)}=${encodeURIComponent(valStr)}; expires=${expires}; path=/; SameSite=Lax${secureAttr}`;
+    } catch (e) {}
+    window['__fs_' + key] = valStr;
   },
   removeItem(key) {
     try {
       localStorage.removeItem(key);
     } catch (e) {
       console.warn('localStorage.removeItem failed for key: ' + key, e);
-      delete window['__fs_' + key];
     }
+    try {
+      const secureAttr = window.location.protocol === 'https:' ? '; Secure' : '';
+      document.cookie = `${encodeURIComponent(key)}=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/; SameSite=Lax${secureAttr}`;
+    } catch (e) {}
+    delete window['__fs_' + key];
   }
 };
 
@@ -150,27 +169,34 @@ async function _supabaseFetch(path, options = {}) {
 // ─── AUTHENTICATION API ──────────────────────────────────────────────────────
 async function login(usernameOrEmail, password) {
   try {
-    const email = usernameOrEmail.includes('@') ? usernameOrEmail : `${usernameOrEmail.toLowerCase()}@skagro.com`;
+    const rawInput = (usernameOrEmail || '').trim();
+    const cleanInput = rawInput.toLowerCase();
+    const email = cleanInput.includes('@') ? cleanInput : `${cleanInput}@skagro.com`;
     const url = `${SUPABASE_URL}/auth/v1/token?grant_type=password`;
     
     const res = await fetch(url, {
       method: 'POST',
-     headers: {
+      headers: {
         'apikey': SUPABASE_KEY,
-        'Content-Type': 'application/json',
-        'Accept': 'application/json'
-     },
+        'Content-Type': 'application/json'
+      },
       body: JSON.stringify({ email, password })
     });
     
     if (!res.ok) {
-      const err = await res.json();
-      throw new Error(err.error_description || err.error || 'Authentication failed');
+      let err = {};
+      try {
+        err = await res.json();
+      } catch (e) {
+        err = {};
+      }
+      const errMsg = err.msg || err.message || err.error_description || err.error || (res.status === 400 ? 'Invalid login credentials' : 'Authentication failed');
+      throw new Error(errMsg);
     }
     
     const json = await res.json();
     
-    // Store token and credentials in local storage
+    // Store token and credentials in local storage & cookie backup
     safeStorage.setItem('inv_auth_token', json.access_token);
     if (json.refresh_token) {
       safeStorage.setItem('inv_refresh_token', json.refresh_token);
