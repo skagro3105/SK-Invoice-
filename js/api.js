@@ -155,10 +155,11 @@ async function login(usernameOrEmail, password) {
     
     const res = await fetch(url, {
       method: 'POST',
-      headers: {
+     headers: {
         'apikey': SUPABASE_KEY,
-        'Content-Type': 'application/json'
-      },
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+     },
       body: JSON.stringify({ email, password })
     });
     
